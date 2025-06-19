@@ -102,3 +102,42 @@ void guardarEnArchivoBin(const string& nombreArchivo) {
     archivo.close();
     cout << "Datos guardados en " << nombreArchivo << " exitosamente.\n";
 }
+void cargarDesdeArchivoBin(const string& nombreArchivo) {
+	
+    ifstream archivo(nombreArchivo, ios::binary);
+    if (!archivo) {
+        cerr << "Error al abrir el archivo para cargar datos.\n";
+        return;
+    }
+    size_t cantidad;
+    archivo.read(reinterpret_cast<char*>(&cantidad), sizeof(cantidad));
+    productos.resize(cantidad);
+    for (auto& producto : productos) {
+        archivo.read(reinterpret_cast<char*>(&producto.codg), sizeof(producto.codg));
+        archivo.read(producto.nombre, sizeof(producto.nombre));
+        archivo.read(reinterpret_cast<char*>(&producto.price), sizeof(producto.price));
+        archivo.read(reinterpret_cast<char*>(&producto.stock), sizeof(producto.stock));
+        size_t categoriaSize;
+        archivo.read(reinterpret_cast<char*>(&categoriaSize), sizeof(categoriaSize));
+        producto.categoria.resize(categoriaSize);
+        archivo.read(&producto.categoria[0], categoriaSize);
+        size_t activoSize;
+        archivo.read(reinterpret_cast<char*>(&activoSize), sizeof(activoSize));
+        producto.activo.resize(activoSize);
+        archivo.read(&producto.activo[0], activoSize);
+    }
+    archivo.close();
+    cout << "Datos cargados desde " << nombreArchivo << " exitosamente.\n";
+}
+
+
+void eliminarProducto(int codigo) {
+    for (auto& producto : productos) {
+        if (producto.codg == codigo) {
+            producto.activo = "E";
+            cout << "Producto marcado como inactivo exitosamente.\n";
+            return;
+        }
+    }
+    cout << "Producto no encontrado.\n";
+}

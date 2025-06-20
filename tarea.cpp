@@ -102,6 +102,7 @@ void guardarEnArchivoBin(const string& nombreArchivo) {
     archivo.close();
     cout << "Datos guardados en " << nombreArchivo << " exitosamente.\n";
 }
+
 void cargarDesdeArchivoBin(const string& nombreArchivo) {
 	
     ifstream archivo(nombreArchivo, ios::binary);
@@ -140,4 +141,91 @@ void eliminarProducto(int codigo) {
         }
     }
     cout << "Producto no encontrado.\n";
+}
+
+
+int main(){
+	int option;
+	string nombreArchivo = "Inventario.bin";
+	
+	do{
+		cout<<"-------Menu-------"<<endl;
+		cout<<"1. Agregar un producto nuevo "<<endl;
+		cout<<"2. Mostrar todos los productos activos "<<endl;
+		cout<<"3. Mostrar productor por categoria "<<endl;
+		cout<<"4. Buscar un producto por codigo "<<endl;
+		cout<<"5. Modificar un producto "<<endl;
+		cout<<"6. Eliminar un producto "<<endl;
+		cout<<"7. Cargar datos desde el archivo binario "<<endl;
+		cout<<"8. Guardar datos en el archivo binario "<<endl;
+		cout<<"9. Salir"<<endl;
+		cout<<" Ingrese su opcion: ";
+		cin>>option;
+		
+		switch(option){
+			case 1:
+				ingProducto();
+				break;
+			case 2:
+				mostrarProductosActivos();
+				break;
+			case 3:
+				mostrarProductosCatg();
+				break;
+			case 4:
+				busCodigo();
+				break;
+			case 5:{
+                int codigo;
+                float nuevoPrecio;
+                int nuevoStock;
+                string nuevaCategoria;
+
+                cout << "Ingrese el codigo del producto a modificar: ";
+                cin >> codigo;
+                cout << "Ingrese el nuevo precio: ";
+                cin >> nuevoPrecio;
+                cout << "Ingrese el nuevo stock: ";
+                cin >> nuevoStock;
+                cout << "Ingrese la nueva categoria: ";
+                cin.ignore();
+                getline(cin, nuevaCategoria);
+
+                for (auto& producto : productos) {
+                    if (producto.codg == codigo) {
+                        producto.price = nuevoPrecio;
+                        producto.stock = nuevoStock;
+                        producto.categoria = nuevaCategoria;
+                        cout << "Producto modificado exitosamente.\n";
+                        break;
+                    }
+                }
+                break;
+            }
+
+			case 6:
+				 {
+                int codigo;
+                cout << "Ingrese el codigo del producto a eliminar: ";
+                cin >> codigo;
+                eliminarProducto(codigo);
+                break;
+            }
+
+				break;
+			case 7:
+				cargarDesdeArchivoBin(nombreArchivo);
+				break;
+			case 8:
+				guardarEnArchivoBin(nombreArchivo);
+				break;
+			case 9:
+				cout<<"Saliendo del programa"<<endl;
+				break;
+			default:
+				cout<<"Ingrese una opcion valida"<<endl;
+				break;
+		}
+	}while(option!=9);
+	return 0;
 }
